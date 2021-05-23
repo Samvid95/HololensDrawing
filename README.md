@@ -25,5 +25,5 @@ This project has voice commands integrated in it. I have also added what key to 
 - *Blue* : Change to color blue (Use: `Num-3` key)
 - *White* : Change to colorwhite (Use: `Num-4` key)
 
-# Feel free to make any changes or open pull request if you want to see any changes in the repositories. 
+### Feel free to make any changes or just ping me if you want to see any changes in the repositories. 
 
