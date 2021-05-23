@@ -1,6 +1,9 @@
 ## Description
 This repository is developed as a coding challenge. With this repository you can draw inside the HoloLens. This repository supports 4 colors only. 
 
+## Demo
+![demo gif](https://github.com/Samvid95/HololensDrawing/blob/main/ARdrawing.gif)
+
 ## Setup & versions
 This contains the list of softwares and versions you will require to setup the project. 
 - Unity 2019.4.26f1
