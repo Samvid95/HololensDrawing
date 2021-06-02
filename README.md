@@ -18,6 +18,7 @@ This project is tested on the editor only. I haven't tested this on the HoloLens
 Use right hand to draw. Pressing down on select will draw the lines.
 - To simulate Right Hand in editor use Space+Left Mouse click. 
 - Change color via using the following menu. Currently supporting 4 colors. Red, Green, Blue, White. If no color is selected it will draw with Black color. 
+- Now you can press 'Z' & 'X' for Undo, Redo respectively
 
 ## Voice Commands
 This project has voice commands integrated in it. I have also added what key to use if you want to test it directly inside the editor and don't want to give microphone permissions.
