@@ -1,11 +1,25 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using System.Runtime.InteropServices;
 using System.Text;
 using Microsoft.MixedReality.Toolkit;
 using Microsoft.MixedReality.Toolkit.Input;
 using Microsoft.MixedReality.Toolkit.Utilities;
+using UnityEditor;
 using UnityEngine;
 
+/// <summary>
+/// Created this class to make sure we have all the events stored and not just the line.
+/// 
+/// This was created as a goal for having a finer undo-redo functionality. IT IS INCOMPLETE! USE IT WITH DISCRETION.
+/// </summary>
+public class AllEvents
+{
+    public GameObject line;
+    public Color color;
+
+
+}
 public class InputManager : MonoBehaviour
 {
     public GameObject lineObject;
@@ -16,6 +30,11 @@ public class InputManager : MonoBehaviour
 
     private LineRenderer lineRenderer;
     private List<Vector3> linePositions;
+
+    private List<GameObject> lines;
+    private List<GameObject> lines_redo;
+
+    private List<AllEvents> events;
 
     /// <summary>
     /// It take the input as a number from button(Red, Green, Blue, White) and assigns to the lineColor variable/
@@ -48,7 +67,9 @@ public class InputManager : MonoBehaviour
     void Start()
     {
         colorNum = -1;
-        linePositions = new List<Vector3>();    
+        linePositions = new List<Vector3>();
+        lines = new List<GameObject>();
+        lines_redo = new List<GameObject>();
     }
 
     // Update is called once per frame
@@ -70,6 +91,7 @@ public class InputManager : MonoBehaviour
                     if (!currentLine)
                     {
                         CreateLine(spatialInput.PositionData);
+                        lines.Add(currentLine);
                     }
                     if(Vector3.Distance(spatialInput.PositionData, linePositions[linePositions.Count - 1]) > 0.05f)
                     {
@@ -83,6 +105,14 @@ public class InputManager : MonoBehaviour
                 }
             }
         }
+        if (Input.GetKeyDown(KeyCode.Z))
+        {
+            undo();
+        }
+        if (Input.GetKeyDown(KeyCode.X))
+        {
+            redo();
+        }
 
     }
     /// <summary>
@@ -94,6 +124,9 @@ public class InputManager : MonoBehaviour
         currentLine = Instantiate(lineObject, Vector3.zero, Quaternion.identity);
         lineRenderer = currentLine.GetComponent<LineRenderer>();
         Debug.Log("Currently drawing: " + linecolor.ToString());
+        /*AllEvents event = new AllEvents();
+        event.color = linecolor;
+        */
         lineRenderer.material.color = linecolor;
         linePositions.Clear();
         linePositions.Add(initPosition);
@@ -113,6 +146,32 @@ public class InputManager : MonoBehaviour
 
         lineRenderer.positionCount++;
         lineRenderer.SetPosition(lineRenderer.positionCount - 1, updatePosition);
+    }
+
+    /// <summary>
+    /// When you press 'Z' undo happens and this is the sequence of events
+    /// - Get the top line element
+    /// - Remove that element
+    /// - Make it disappear
+    /// - Add it in another list so we can use it for redo later
+    /// </summary>
+    void undo()
+    {
+        GameObject top_line = lines[lines.Count - 1];
+        lines.RemoveAt(lines.Count - 1);
+        top_line.SetActive(false);
+        lines_redo.Add(top_line);
+    }
+
+    /// <summary>
+    /// Same as the Undo just in reverse. Straight forward code.
+    /// </summary>
+    void redo()
+    {
+        GameObject top_line = lines_redo[lines_redo.Count - 1];
+        lines_redo.RemoveAt(lines_redo.Count - 1);
+        top_line.SetActive(true);
+        lines.Add(top_line);
     }
 
 
